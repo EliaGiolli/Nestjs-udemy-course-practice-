@@ -24,50 +24,99 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+This is a tiny educational API written with [NestJS](https://github.com/nestjs/nest).  
+It is **not a custom production app**, but rather the working code that follows along with an **Udemy course on Nest.js by Stephen Grider**.  
+The goal of the project is to explore Nest's fundamentals in the simplest possible way: modules, controllers, services, dependency injection, and a very lightweight persistence layer.
+
+## What this project demonstrates
+
+- **NestJS fundamentals**: modules, controllers, services, providers.
+- **Dependency Injection**: how Nest wires a `MessagesService` to a `MessagesRepository`.
+- **DTOs and validation-ready structure**: using a `CreateMessageDto` to shape request bodies.
+- **Simple persistence**: messages are stored in a local `messages.json` file via a custom repository.
+- **Basic error handling**: returning a `NotFoundException` when a message does not exist.
+
+## Tech stack
+
+- **Runtime**: Node.js
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Storage**: JSON file (`messages.json`, purely for learning purposes)
 
 ## Installation
 
+From the project root:
+
 ```bash
-$ npm install
+npm install
 ```
 
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+npm run start
 
-# watch mode
-$ npm run start:dev
+# watch mode (recommended while coding)
+npm run start:dev
 
-# production mode
-$ npm run start:prod
+# production mode (compiled)
+npm run start:prod
 ```
 
-## Test
+By default, the app listens on `http://localhost:3000`.
+
+## API overview
+
+All routes are prefixed with `/messages` via the `MessagesController`.
+
+- **GET `/messages`**  
+  - **Description**: List all stored messages.
+  - **Response**: An object keyed by `id`, each value containing `{ id, content }`.
+
+- **GET `/messages/:id`**  
+  - **Description**: Fetch a single message by id.
+  - **Responses**:
+    - `200 OK` with `{ id, content }` if found.
+    - `404 Not Found` (`NotFoundException`) if the message does not exist.
+
+- **POST `/messages`**  
+  - **Description**: Create a new message.
+  - **Body**:
+    ```json
+    {
+      "content": "Your message text"
+    }
+    ```
+  - **Response**: Currently no explicit response body is returned; the repository writes the new message into `messages.json`.
+
+## How data is stored
+
+- Messages are read from and written to `messages.json` in the project root.
+- The `MessagesRepository`:
+  - Reads the entire JSON file into memory.
+  - Generates a random numeric `id`.
+  - Stores each message as `{ id, content }` keyed by its `id`.
+- This is **deliberately naive** and meant only to keep things simple and transparent while learning NestJS.  
+  For any real application, you would use a proper database and a robust persistence layer.
+
+## Tests
+
+The testing setup is the standard Nest CLI Jest configuration. Commands:
 
 ```bash
 # unit tests
-$ npm run test
+npm run test
 
 # e2e tests
-$ npm run test:e2e
+npm run test:e2e
 
 # test coverage
-$ npm run test:cov
+npm run test:cov
 ```
 
-## Support
+## Course attribution
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- **Instructor**: Stephen Grider  
+- **Platform**: Udemy  
+- **Purpose**: This repository mirrors the example "messages" service from Stephen Grider's Nest.js course and is intended **only for learning and experimentation**.
